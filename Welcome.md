@@ -1,18 +1,9 @@
-This is your new _vault_.
-
-Make a note of something, [[create a link]], or try [the Importer](https://help.obsidian.md/Plugins/Importer)!
-
-When you're ready, delete this note and make the vault your own.
-
-This commit belongs to fit.
-
-This commit was auto with fit.
-Hey this image with obsidian
-[[Pasted image 20250410090206.png]]
-
-Bu commit fit ile atıldı.
-After fit commit message edit. 2
-I will clean this
+This repository meant to be used to document Ayasofyazilim's projects.
 
 
-Bu commit fit ile mobilden atıldı.
+- [ ] [Download](https://obsidian.md/download) obsidian client.
+- [ ] Clone this repository on your desired device.
+- [ ] Open from obsidian.
+- [ ] Enable Community Plugins, Open  ==**Settings > Options > Community Plugins**==  and enable it.
+- [ ] Authorize Fit Plugin for commiting your changes to repository. **==Settings > Community Plugins > Fit==** and folllow instructions.
+- [ ] 
