@@ -7,16 +7,13 @@ var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
 var __getOwnPropNames = Object.getOwnPropertyNames;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
-var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __defNormalProp = (obj, key, value) => (key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : (obj[key] = value));
 var __export = (target, all) => {
-  for (var name in all)
-    __defProp(target, name, { get: all[name], enumerable: true });
+  for (var name in all) __defProp(target, name, { get: all[name], enumerable: true });
 };
 var __copyProps = (to, from, except, desc) => {
-  if (from && typeof from === "object" || typeof from === "function") {
-    for (let key of __getOwnPropNames(from))
-      if (!__hasOwnProp.call(to, key) && key !== except)
-        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
+  if ((from && typeof from === "object") || typeof from === "function") {
+    for (let key of __getOwnPropNames(from)) if (!__hasOwnProp.call(to, key) && key !== except) __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
   }
   return to;
 };
@@ -29,7 +26,7 @@ var __publicField = (obj, key, value) => {
 // main.ts
 var main_exports = {};
 __export(main_exports, {
-  default: () => FitPlugin
+  default: () => FitPlugin,
 });
 module.exports = __toCommonJS(main_exports);
 var import_obsidian7 = require("obsidian");
@@ -82,24 +79,29 @@ function addHook(state, kind, name, hook2) {
   if (kind === "after") {
     hook2 = (method, options) => {
       let result;
-      return Promise.resolve().then(method.bind(null, options)).then((result_) => {
-        result = result_;
-        return orig(result, options);
-      }).then(() => {
-        return result;
-      });
+      return Promise.resolve()
+        .then(method.bind(null, options))
+        .then((result_) => {
+          result = result_;
+          return orig(result, options);
+        })
+        .then(() => {
+          return result;
+        });
     };
   }
   if (kind === "error") {
     hook2 = (method, options) => {
-      return Promise.resolve().then(method.bind(null, options)).catch((error) => {
-        return orig(error, options);
-      });
+      return Promise.resolve()
+        .then(method.bind(null, options))
+        .catch((error) => {
+          return orig(error, options);
+        });
     };
   }
   state.registry[name].push({
     hook: hook2,
-    orig
+    orig,
   });
 }
 
@@ -108,9 +110,11 @@ function removeHook(state, name, method) {
   if (!state.registry[name]) {
     return;
   }
-  const index = state.registry[name].map((registered) => {
-    return registered.orig;
-  }).indexOf(method);
+  const index = state.registry[name]
+    .map((registered) => {
+      return registered.orig;
+    })
+    .indexOf(method);
   if (index === -1) {
     return;
   }
@@ -121,10 +125,7 @@ function removeHook(state, name, method) {
 var bind = Function.bind;
 var bindable = bind.bind(bind);
 function bindApi(hook2, state, name) {
-  const removeHookRef = bindable(removeHook, null).apply(
-    null,
-    name ? [state, name] : [state]
-  );
+  const removeHookRef = bindable(removeHook, null).apply(null, name ? [state, name] : [state]);
   hook2.api = { remove: removeHookRef };
   hook2.remove = removeHookRef;
   ["before", "error", "after", "wrap"].forEach((kind) => {
@@ -135,7 +136,7 @@ function bindApi(hook2, state, name) {
 function Singular() {
   const singularHookName = Symbol("Singular");
   const singularHookState = {
-    registry: {}
+    registry: {},
   };
   const singularHook = register.bind(null, singularHookState, singularHookName);
   bindApi(singularHook, singularHookState, singularHookName);
@@ -143,7 +144,7 @@ function Singular() {
 }
 function Collection() {
   const state = {
-    registry: {}
+    registry: {},
   };
   const hook2 = register.bind(null, state);
   bindApi(hook2, state);
@@ -170,11 +171,11 @@ var DEFAULTS = {
   baseUrl: "https://api.github.com",
   headers: {
     accept: "application/vnd.github.v3+json",
-    "user-agent": userAgent
+    "user-agent": userAgent,
   },
   mediaType: {
-    format: ""
-  }
+    format: "",
+  },
 };
 function lowercaseKeys(object) {
   if (!object) {
@@ -186,13 +187,10 @@ function lowercaseKeys(object) {
   }, {});
 }
 function isPlainObject(value) {
-  if (typeof value !== "object" || value === null)
-    return false;
-  if (Object.prototype.toString.call(value) !== "[object Object]")
-    return false;
+  if (typeof value !== "object" || value === null) return false;
+  if (Object.prototype.toString.call(value) !== "[object Object]") return false;
   const proto = Object.getPrototypeOf(value);
-  if (proto === null)
-    return true;
+  if (proto === null) return true;
   const Ctor = Object.prototype.hasOwnProperty.call(proto, "constructor") && proto.constructor;
   return typeof Ctor === "function" && Ctor instanceof Ctor && Function.prototype.call(Ctor) === Function.prototype.call(value);
 }
@@ -200,10 +198,8 @@ function mergeDeep(defaults, options) {
   const result = Object.assign({}, defaults);
   Object.keys(options).forEach((key) => {
     if (isPlainObject(options[key])) {
-      if (!(key in defaults))
-        Object.assign(result, { [key]: options[key] });
-      else
-        result[key] = mergeDeep(defaults[key], options[key]);
+      if (!(key in defaults)) Object.assign(result, { [key]: options[key] });
+      else result[key] = mergeDeep(defaults[key], options[key]);
     } else {
       Object.assign(result, { [key]: options[key] });
     }
@@ -232,9 +228,7 @@ function merge(defaults, route, options) {
   const mergedOptions = mergeDeep(defaults || {}, options);
   if (options.url === "/graphql") {
     if (defaults && ((_a = defaults.mediaType.previews) == null ? void 0 : _a.length)) {
-      mergedOptions.mediaType.previews = defaults.mediaType.previews.filter(
-        (preview) => !mergedOptions.mediaType.previews.includes(preview)
-      ).concat(mergedOptions.mediaType.previews);
+      mergedOptions.mediaType.previews = defaults.mediaType.previews.filter((preview) => !mergedOptions.mediaType.previews.includes(preview)).concat(mergedOptions.mediaType.previews);
     }
     mergedOptions.mediaType.previews = (mergedOptions.mediaType.previews || []).map((preview) => preview.replace(/-preview/, ""));
   }
@@ -246,12 +240,18 @@ function addQueryParameters(url, parameters) {
   if (names.length === 0) {
     return url;
   }
-  return url + separator + names.map((name) => {
-    if (name === "q") {
-      return "q=" + parameters.q.split("+").map(encodeURIComponent).join("+");
-    }
-    return `${name}=${encodeURIComponent(parameters[name])}`;
-  }).join("&");
+  return (
+    url +
+    separator +
+    names
+      .map((name) => {
+        if (name === "q") {
+          return "q=" + parameters.q.split("+").map(encodeURIComponent).join("+");
+        }
+        return `${name}=${encodeURIComponent(parameters[name])}`;
+      })
+      .join("&")
+  );
 }
 var urlVariableRegex = /\{[^}]+\}/g;
 function removeNonChars(variableName) {
@@ -274,15 +274,18 @@ function omit(object, keysToOmit) {
   return result;
 }
 function encodeReserved(str) {
-  return str.split(/(%[0-9A-Fa-f]{2})/g).map(function(part) {
-    if (!/%[0-9A-Fa-f]/.test(part)) {
-      part = encodeURI(part).replace(/%5B/g, "[").replace(/%5D/g, "]");
-    }
-    return part;
-  }).join("");
+  return str
+    .split(/(%[0-9A-Fa-f]{2})/g)
+    .map(function (part) {
+      if (!/%[0-9A-Fa-f]/.test(part)) {
+        part = encodeURI(part).replace(/%5B/g, "[").replace(/%5D/g, "]");
+      }
+      return part;
+    })
+    .join("");
 }
 function encodeUnreserved(str) {
-  return encodeURIComponent(str).replace(/[!'()*]/g, function(c) {
+  return encodeURIComponent(str).replace(/[!'()*]/g, function (c) {
     return "%" + c.charCodeAt(0).toString(16).toUpperCase();
   });
 }
@@ -301,26 +304,23 @@ function isKeyOperator(operator) {
   return operator === ";" || operator === "&" || operator === "?";
 }
 function getValues(context, operator, key, modifier) {
-  var value = context[key], result = [];
+  var value = context[key],
+    result = [];
   if (isDefined(value) && value !== "") {
     if (typeof value === "string" || typeof value === "number" || typeof value === "boolean") {
       value = value.toString();
       if (modifier && modifier !== "*") {
         value = value.substring(0, parseInt(modifier, 10));
       }
-      result.push(
-        encodeValue(operator, value, isKeyOperator(operator) ? key : "")
-      );
+      result.push(encodeValue(operator, value, isKeyOperator(operator) ? key : ""));
     } else {
       if (modifier === "*") {
         if (Array.isArray(value)) {
-          value.filter(isDefined).forEach(function(value2) {
-            result.push(
-              encodeValue(operator, value2, isKeyOperator(operator) ? key : "")
-            );
+          value.filter(isDefined).forEach(function (value2) {
+            result.push(encodeValue(operator, value2, isKeyOperator(operator) ? key : ""));
           });
         } else {
-          Object.keys(value).forEach(function(k) {
+          Object.keys(value).forEach(function (k) {
             if (isDefined(value[k])) {
               result.push(encodeValue(operator, value[k], k));
             }
@@ -329,11 +329,11 @@ function getValues(context, operator, key, modifier) {
       } else {
         const tmp = [];
         if (Array.isArray(value)) {
-          value.filter(isDefined).forEach(function(value2) {
+          value.filter(isDefined).forEach(function (value2) {
             tmp.push(encodeValue(operator, value2));
           });
         } else {
-          Object.keys(value).forEach(function(k) {
+          Object.keys(value).forEach(function (k) {
             if (isDefined(value[k])) {
               tmp.push(encodeUnreserved(k));
               tmp.push(encodeValue(operator, value[k].toString()));
@@ -362,41 +362,38 @@ function getValues(context, operator, key, modifier) {
 }
 function parseUrl(template) {
   return {
-    expand: expand.bind(null, template)
+    expand: expand.bind(null, template),
   };
 }
 function expand(template, context) {
   var operators = ["+", "#", ".", "/", ";", "?", "&"];
-  template = template.replace(
-    /\{([^\{\}]+)\}|([^\{\}]+)/g,
-    function(_, expression, literal) {
-      if (expression) {
-        let operator = "";
-        const values = [];
-        if (operators.indexOf(expression.charAt(0)) !== -1) {
-          operator = expression.charAt(0);
-          expression = expression.substr(1);
-        }
-        expression.split(/,/g).forEach(function(variable) {
-          var tmp = /([^:\*]*)(?::(\d+)|(\*))?/.exec(variable);
-          values.push(getValues(context, operator, tmp[1], tmp[2] || tmp[3]));
-        });
-        if (operator && operator !== "+") {
-          var separator = ",";
-          if (operator === "?") {
-            separator = "&";
-          } else if (operator !== "#") {
-            separator = operator;
-          }
-          return (values.length !== 0 ? operator : "") + values.join(separator);
-        } else {
-          return values.join(",");
-        }
-      } else {
-        return encodeReserved(literal);
+  template = template.replace(/\{([^\{\}]+)\}|([^\{\}]+)/g, function (_, expression, literal) {
+    if (expression) {
+      let operator = "";
+      const values = [];
+      if (operators.indexOf(expression.charAt(0)) !== -1) {
+        operator = expression.charAt(0);
+        expression = expression.substr(1);
       }
+      expression.split(/,/g).forEach(function (variable) {
+        var tmp = /([^:\*]*)(?::(\d+)|(\*))?/.exec(variable);
+        values.push(getValues(context, operator, tmp[1], tmp[2] || tmp[3]));
+      });
+      if (operator && operator !== "+") {
+        var separator = ",";
+        if (operator === "?") {
+          separator = "&";
+        } else if (operator !== "#") {
+          separator = operator;
+        }
+        return (values.length !== 0 ? operator : "") + values.join(separator);
+      } else {
+        return values.join(",");
+      }
+    } else {
+      return encodeReserved(literal);
     }
-  );
+  });
   if (template === "/") {
     return template;
   } else {
@@ -409,38 +406,34 @@ function parse(options) {
   let url = (options.url || "/").replace(/:([a-z]\w+)/g, "{$1}");
   let headers = Object.assign({}, options.headers);
   let body;
-  let parameters = omit(options, [
-    "method",
-    "baseUrl",
-    "url",
-    "headers",
-    "request",
-    "mediaType"
-  ]);
+  let parameters = omit(options, ["method", "baseUrl", "url", "headers", "request", "mediaType"]);
   const urlVariableNames = extractUrlVariableNames(url);
   url = parseUrl(url).expand(parameters);
   if (!/^http/.test(url)) {
     url = options.baseUrl + url;
   }
-  const omittedParameters = Object.keys(options).filter((option) => urlVariableNames.includes(option)).concat("baseUrl");
+  const omittedParameters = Object.keys(options)
+    .filter((option) => urlVariableNames.includes(option))
+    .concat("baseUrl");
   const remainingParameters = omit(parameters, omittedParameters);
   const isBinaryRequest = /application\/octet-stream/i.test(headers.accept);
   if (!isBinaryRequest) {
     if (options.mediaType.format) {
-      headers.accept = headers.accept.split(/,/).map(
-        (format) => format.replace(
-          /application\/vnd(\.\w+)(\.v3)?(\.\w+)?(\+json)?$/,
-          `application/vnd$1$2.${options.mediaType.format}`
-        )
-      ).join(",");
+      headers.accept = headers.accept
+        .split(/,/)
+        .map((format) => format.replace(/application\/vnd(\.\w+)(\.v3)?(\.\w+)?(\+json)?$/, `application/vnd$1$2.${options.mediaType.format}`))
+        .join(",");
     }
     if (url.endsWith("/graphql")) {
       if ((_a = options.mediaType.previews) == null ? void 0 : _a.length) {
         const previewsFromAcceptHeader = headers.accept.match(/[\w-]+(?=-preview)/g) || [];
-        headers.accept = previewsFromAcceptHeader.concat(options.mediaType.previews).map((preview) => {
-          const format = options.mediaType.format ? `.${options.mediaType.format}` : "+json";
-          return `application/vnd.github.${preview}-preview${format}`;
-        }).join(",");
+        headers.accept = previewsFromAcceptHeader
+          .concat(options.mediaType.previews)
+          .map((preview) => {
+            const format = options.mediaType.format ? `.${options.mediaType.format}` : "+json";
+            return `application/vnd.github.${preview}-preview${format}`;
+          })
+          .join(",");
       }
     }
   }
@@ -461,11 +454,7 @@ function parse(options) {
   if (["PATCH", "PUT"].includes(method) && typeof body === "undefined") {
     body = "";
   }
-  return Object.assign(
-    { method, url, headers },
-    typeof body !== "undefined" ? { body } : null,
-    options.request ? { request: options.request } : null
-  );
+  return Object.assign({ method, url, headers }, typeof body !== "undefined" ? { body } : null, options.request ? { request: options.request } : null);
 }
 function endpointWithDefaults(defaults, route, options) {
   return parse(merge(defaults, route, options));
@@ -477,7 +466,7 @@ function withDefaults(oldDefaults, newDefaults) {
     DEFAULTS: DEFAULTS2,
     defaults: withDefaults.bind(null, DEFAULTS2),
     merge: merge.bind(null, DEFAULTS2),
-    parse
+    parse,
   });
 }
 var endpoint = withDefaults(null, DEFAULTS);
@@ -521,10 +510,7 @@ var RequestError = class extends Error {
     const requestCopy = Object.assign({}, options.request);
     if (options.request.headers.authorization) {
       requestCopy.headers = Object.assign({}, options.request.headers, {
-        authorization: options.request.headers.authorization.replace(
-          / .*$/,
-          " [REDACTED]"
-        )
+        authorization: options.request.headers.authorization.replace(/ .*$/, " [REDACTED]"),
       });
     }
     requestCopy.url = requestCopy.url.replace(/\bclient_secret=\w+/g, "client_secret=[REDACTED]").replace(/\baccess_token=\w+/g, "access_token=[REDACTED]");
@@ -535,13 +521,10 @@ var RequestError = class extends Error {
 // node_modules/@octokit/request/dist-bundle/index.js
 var VERSION2 = "0.0.0-development";
 function isPlainObject2(value) {
-  if (typeof value !== "object" || value === null)
-    return false;
-  if (Object.prototype.toString.call(value) !== "[object Object]")
-    return false;
+  if (typeof value !== "object" || value === null) return false;
+  if (Object.prototype.toString.call(value) !== "[object Object]") return false;
   const proto = Object.getPrototypeOf(value);
-  if (proto === null)
-    return true;
+  if (proto === null) return true;
   const Ctor = Object.prototype.hasOwnProperty.call(proto, "constructor") && proto.constructor;
   return typeof Ctor === "function" && Ctor instanceof Ctor && Function.prototype.call(Ctor) === Function.prototype.call(value);
 }
@@ -563,108 +546,103 @@ function fetchWrapper(requestOptions) {
     fetch = requestOptions.request.fetch;
   }
   if (!fetch) {
-    throw new Error(
-      "fetch is not set. Please pass a fetch implementation as new Octokit({ request: { fetch }}). Learn more at https://github.com/octokit/octokit.js/#fetch-missing"
-    );
+    throw new Error("fetch is not set. Please pass a fetch implementation as new Octokit({ request: { fetch }}). Learn more at https://github.com/octokit/octokit.js/#fetch-missing");
   }
   return fetch(requestOptions.url, {
     method: requestOptions.method,
     body: requestOptions.body,
     // Header values must be `string`
-    headers: Object.fromEntries(
-      Object.entries(requestOptions.headers).map(([name, value]) => [
-        name,
-        String(value)
-      ])
-    ),
+    headers: Object.fromEntries(Object.entries(requestOptions.headers).map(([name, value]) => [name, String(value)])),
     signal: (_c = requestOptions.request) == null ? void 0 : _c.signal,
     // duplex must be set if request.body is ReadableStream or Async Iterables.
     // See https://fetch.spec.whatwg.org/#dom-requestinit-duplex.
-    ...requestOptions.body && { duplex: "half" }
-  }).then(async (response) => {
-    url = response.url;
-    status = response.status;
-    for (const keyAndValue of response.headers) {
-      headers[keyAndValue[0]] = keyAndValue[1];
-    }
-    if ("deprecation" in headers) {
-      const matches = headers.link && headers.link.match(/<([^>]+)>; rel="deprecation"/);
-      const deprecationLink = matches && matches.pop();
-      log.warn(
-        `[@octokit/request] "${requestOptions.method} ${requestOptions.url}" is deprecated. It is scheduled to be removed on ${headers.sunset}${deprecationLink ? `. See ${deprecationLink}` : ""}`
-      );
-    }
-    if (status === 204 || status === 205) {
-      return;
-    }
-    if (requestOptions.method === "HEAD") {
-      if (status < 400) {
+    ...(requestOptions.body && { duplex: "half" }),
+  })
+    .then(async (response) => {
+      url = response.url;
+      status = response.status;
+      for (const keyAndValue of response.headers) {
+        headers[keyAndValue[0]] = keyAndValue[1];
+      }
+      if ("deprecation" in headers) {
+        const matches = headers.link && headers.link.match(/<([^>]+)>; rel="deprecation"/);
+        const deprecationLink = matches && matches.pop();
+        log.warn(`[@octokit/request] "${requestOptions.method} ${requestOptions.url}" is deprecated. It is scheduled to be removed on ${headers.sunset}${deprecationLink ? `. See ${deprecationLink}` : ""}`);
+      }
+      if (status === 204 || status === 205) {
         return;
       }
-      throw new RequestError(response.statusText, status, {
-        response: {
-          url,
-          status,
-          headers,
-          data: void 0
-        },
-        request: requestOptions
-      });
-    }
-    if (status === 304) {
-      throw new RequestError("Not modified", status, {
-        response: {
-          url,
-          status,
-          headers,
-          data: await getResponseData(response)
-        },
-        request: requestOptions
-      });
-    }
-    if (status >= 400) {
-      const data = await getResponseData(response);
-      const error = new RequestError(toErrorMessage(data), status, {
-        response: {
-          url,
-          status,
-          headers,
-          data
-        },
-        request: requestOptions
-      });
-      throw error;
-    }
-    return parseSuccessResponseBody ? await getResponseData(response) : response.body;
-  }).then((data) => {
-    return {
-      status,
-      url,
-      headers,
-      data
-    };
-  }).catch((error) => {
-    if (error instanceof RequestError)
-      throw error;
-    else if (error.name === "AbortError")
-      throw error;
-    let message = error.message;
-    if (error.name === "TypeError" && "cause" in error) {
-      if (error.cause instanceof Error) {
-        message = error.cause.message;
-      } else if (typeof error.cause === "string") {
-        message = error.cause;
+      if (requestOptions.method === "HEAD") {
+        if (status < 400) {
+          return;
+        }
+        throw new RequestError(response.statusText, status, {
+          response: {
+            url,
+            status,
+            headers,
+            data: void 0,
+          },
+          request: requestOptions,
+        });
       }
-    }
-    throw new RequestError(message, 500, {
-      request: requestOptions
+      if (status === 304) {
+        throw new RequestError("Not modified", status, {
+          response: {
+            url,
+            status,
+            headers,
+            data: await getResponseData(response),
+          },
+          request: requestOptions,
+        });
+      }
+      if (status >= 400) {
+        const data = await getResponseData(response);
+        const error = new RequestError(toErrorMessage(data), status, {
+          response: {
+            url,
+            status,
+            headers,
+            data,
+          },
+          request: requestOptions,
+        });
+        throw error;
+      }
+      return parseSuccessResponseBody ? await getResponseData(response) : response.body;
+    })
+    .then((data) => {
+      return {
+        status,
+        url,
+        headers,
+        data,
+      };
+    })
+    .catch((error) => {
+      if (error instanceof RequestError) throw error;
+      else if (error.name === "AbortError") throw error;
+      let message = error.message;
+      if (error.name === "TypeError" && "cause" in error) {
+        if (error.cause instanceof Error) {
+          message = error.cause.message;
+        } else if (typeof error.cause === "string") {
+          message = error.cause;
+        }
+      }
+      throw new RequestError(message, 500, {
+        request: requestOptions,
+      });
     });
-  });
 }
 async function getResponseData(response) {
   const contentType = response.headers.get("content-type");
   if (/application\/json/.test(contentType)) {
-    return response.json().catch(() => response.text()).catch(() => "");
+    return response
+      .json()
+      .catch(() => response.text())
+      .catch(() => "");
   }
   if (!contentType || /^text\/|charset=utf-8$/.test(contentType)) {
     return response.text();
@@ -672,8 +650,7 @@ async function getResponseData(response) {
   return getBufferResponse(response);
 }
 function toErrorMessage(data) {
-  if (typeof data === "string")
-    return data;
+  if (typeof data === "string") return data;
   let suffix;
   if ("documentation_url" in data) {
     suffix = ` - ${data.documentation_url}`;
@@ -690,31 +667,29 @@ function toErrorMessage(data) {
 }
 function withDefaults2(oldEndpoint, newDefaults) {
   const endpoint2 = oldEndpoint.defaults(newDefaults);
-  const newApi = function(route, parameters) {
+  const newApi = function (route, parameters) {
     const endpointOptions = endpoint2.merge(route, parameters);
     if (!endpointOptions.request || !endpointOptions.request.hook) {
       return fetchWrapper(endpoint2.parse(endpointOptions));
     }
     const request2 = (route2, parameters2) => {
-      return fetchWrapper(
-        endpoint2.parse(endpoint2.merge(route2, parameters2))
-      );
+      return fetchWrapper(endpoint2.parse(endpoint2.merge(route2, parameters2)));
     };
     Object.assign(request2, {
       endpoint: endpoint2,
-      defaults: withDefaults2.bind(null, endpoint2)
+      defaults: withDefaults2.bind(null, endpoint2),
     });
     return endpointOptions.request.hook(request2, endpointOptions);
   };
   return Object.assign(newApi, {
     endpoint: endpoint2,
-    defaults: withDefaults2.bind(null, endpoint2)
+    defaults: withDefaults2.bind(null, endpoint2),
   });
 }
 var request = withDefaults2(endpoint, {
   headers: {
-    "user-agent": `octokit-request.js/${VERSION2} ${getUserAgent3()}`
-  }
+    "user-agent": `octokit-request.js/${VERSION2} ${getUserAgent3()}`,
+  },
 });
 
 // node_modules/@octokit/graphql/node_modules/universal-user-agent/index.js
@@ -731,8 +706,10 @@ function getUserAgent4() {
 // node_modules/@octokit/graphql/dist-bundle/index.js
 var VERSION3 = "0.0.0-development";
 function _buildMessageForResponseErrors(data) {
-  return `Request failed due to following response errors:
-` + data.errors.map((e) => ` - ${e.message}`).join("\n");
+  return (
+    `Request failed due to following response errors:
+` + data.errors.map((e) => ` - ${e.message}`).join("\n")
+  );
 }
 var GraphqlResponseError = class extends Error {
   constructor(request2, headers, response) {
@@ -750,38 +727,21 @@ var GraphqlResponseError = class extends Error {
     }
   }
 };
-var NON_VARIABLE_OPTIONS = [
-  "method",
-  "baseUrl",
-  "url",
-  "headers",
-  "request",
-  "query",
-  "mediaType"
-];
+var NON_VARIABLE_OPTIONS = ["method", "baseUrl", "url", "headers", "request", "query", "mediaType"];
 var FORBIDDEN_VARIABLE_OPTIONS = ["query", "method", "url"];
 var GHES_V3_SUFFIX_REGEX = /\/api\/v3\/?$/;
 function graphql(request2, query, options) {
   if (options) {
     if (typeof query === "string" && "query" in options) {
-      return Promise.reject(
-        new Error(`[@octokit/graphql] "query" cannot be used as variable name`)
-      );
+      return Promise.reject(new Error(`[@octokit/graphql] "query" cannot be used as variable name`));
     }
     for (const key in options) {
-      if (!FORBIDDEN_VARIABLE_OPTIONS.includes(key))
-        continue;
-      return Promise.reject(
-        new Error(
-          `[@octokit/graphql] "${key}" cannot be used as variable name`
-        )
-      );
+      if (!FORBIDDEN_VARIABLE_OPTIONS.includes(key)) continue;
+      return Promise.reject(new Error(`[@octokit/graphql] "${key}" cannot be used as variable name`));
     }
   }
   const parsedOptions = typeof query === "string" ? Object.assign({ query }, options) : query;
-  const requestOptions = Object.keys(
-    parsedOptions
-  ).reduce((result, key) => {
+  const requestOptions = Object.keys(parsedOptions).reduce((result, key) => {
     if (NON_VARIABLE_OPTIONS.includes(key)) {
       result[key] = parsedOptions[key];
       return result;
@@ -802,11 +762,7 @@ function graphql(request2, query, options) {
       for (const key of Object.keys(response.headers)) {
         headers[key] = response.headers[key];
       }
-      throw new GraphqlResponseError(
-        requestOptions,
-        headers,
-        response.data
-      );
+      throw new GraphqlResponseError(requestOptions, headers, response.data);
     }
     return response.data.data;
   });
@@ -818,20 +774,20 @@ function withDefaults3(request2, newDefaults) {
   };
   return Object.assign(newApi, {
     defaults: withDefaults3.bind(null, newRequest),
-    endpoint: newRequest.endpoint
+    endpoint: newRequest.endpoint,
   });
 }
 var graphql2 = withDefaults3(request, {
   headers: {
-    "user-agent": `octokit-graphql.js/${VERSION3} ${getUserAgent4()}`
+    "user-agent": `octokit-graphql.js/${VERSION3} ${getUserAgent4()}`,
   },
   method: "POST",
-  url: "/graphql"
+  url: "/graphql",
 });
 function withCustomRequest(customRequest) {
   return withDefaults3(customRequest, {
     method: "POST",
-    url: "/graphql"
+    url: "/graphql",
   });
 }
 
@@ -847,7 +803,7 @@ async function auth(token) {
   return {
     type: "token",
     token,
-    tokenType
+    tokenType,
   };
 }
 function withAuthorizationPrefix(token) {
@@ -857,10 +813,7 @@ function withAuthorizationPrefix(token) {
   return `token ${token}`;
 }
 async function hook(token, request2, route, parameters) {
-  const endpoint2 = request2.endpoint.merge(
-    route,
-    parameters
-  );
+  const endpoint2 = request2.endpoint.merge(route, parameters);
   endpoint2.headers.authorization = withAuthorizationPrefix(token);
   return request2(endpoint2);
 }
@@ -869,13 +822,11 @@ var createTokenAuth = function createTokenAuth2(token) {
     throw new Error("[@octokit/auth-token] No token passed to createTokenAuth");
   }
   if (typeof token !== "string") {
-    throw new Error(
-      "[@octokit/auth-token] Token passed to createTokenAuth is not a string"
-    );
+    throw new Error("[@octokit/auth-token] Token passed to createTokenAuth is not a string");
   }
   token = token.replace(/^(token|bearer) +/i, "");
   return Object.assign(auth.bind(null, token), {
-    hook: hook.bind(null, token)
+    hook: hook.bind(null, token),
   });
 };
 
@@ -883,8 +834,7 @@ var createTokenAuth = function createTokenAuth2(token) {
 var VERSION4 = "6.0.1";
 
 // node_modules/@octokit/core/dist-src/index.js
-var noop = () => {
-};
+var noop = () => {};
 var consoleWarn = console.warn.bind(console);
 var consoleError = console.error.bind(console);
 var userAgentTrail = `octokit-core.js/${VERSION4} ${getUserAgent()}`;
@@ -903,12 +853,12 @@ var Octokit = class {
       headers: {},
       request: Object.assign({}, options.request, {
         // @ts-ignore internal usage only, no need to type
-        hook: hook2.bind(null, "request")
+        hook: hook2.bind(null, "request"),
       }),
       mediaType: {
         previews: [],
-        format: ""
-      }
+        format: "",
+      },
     };
     requestDefaults.headers["user-agent"] = options.userAgent ? `${options.userAgent} ${userAgentTrail}` : userAgentTrail;
     if (options.baseUrl) {
@@ -927,15 +877,15 @@ var Octokit = class {
         debug: noop,
         info: noop,
         warn: consoleWarn,
-        error: consoleError
+        error: consoleError,
       },
-      options.log
+      options.log,
     );
     this.hook = hook2;
     if (!options.authStrategy) {
       if (!options.auth) {
         this.auth = async () => ({
-          type: "unauthenticated"
+          type: "unauthenticated",
         });
       } else {
         const auth2 = createTokenAuth(options.auth);
@@ -955,10 +905,10 @@ var Octokit = class {
             // requirement for this was the "event-octokit" authentication strategy
             // of https://github.com/probot/octokit-auth-probot.
             octokit: this,
-            octokitOptions: otherOptions
+            octokitOptions: otherOptions,
           },
-          options.auth
-        )
+          options.auth,
+        ),
       );
       hook2.wrap("request", auth2.hook);
       this.auth = auth2;
@@ -981,10 +931,12 @@ var Octokit = class {
             {},
             defaults,
             options,
-            options.userAgent && defaults.userAgent ? {
-              userAgent: `${options.userAgent} ${defaults.userAgent}`
-            } : null
-          )
+            options.userAgent && defaults.userAgent
+              ? {
+                  userAgent: `${options.userAgent} ${defaults.userAgent}`,
+                }
+              : null,
+          ),
         );
       }
     };
@@ -999,10 +951,7 @@ var Octokit = class {
   static plugin(...newPlugins) {
     var _a;
     const currentPlugins = this.plugins;
-    const NewOctokit = (_a = class extends this {
-    }, __publicField(_a, "plugins", currentPlugins.concat(
-      newPlugins.filter((plugin) => !currentPlugins.includes(plugin))
-    )), _a);
+    const NewOctokit = ((_a = class extends this {}), __publicField(_a, "plugins", currentPlugins.concat(newPlugins.filter((plugin) => !currentPlugins.includes(plugin)))), _a);
     return NewOctokit;
   }
 };
@@ -1029,12 +978,14 @@ function compareSha(currentShaMap, storedShaMap, env) {
     const [currentSha, storedSha] = [getValueOrNull(currentShaMap, path), getValueOrNull(storedShaMap, path)];
     const status = determineStatus(currentSha, storedSha);
     if (status) {
-      return [{
-        path,
-        status,
-        currentSha: currentSha != null ? currentSha : void 0,
-        extension: extractExtension(path)
-      }];
+      return [
+        {
+          path,
+          status,
+          currentSha: currentSha != null ? currentSha : void 0,
+          extension: extractExtension(path),
+        },
+      ];
     }
     return [];
   });
@@ -1064,14 +1015,14 @@ function showFileOpsRecord(records) {
       return;
     }
     const heading = fileOpsNotice.noticeEl.createEl("span", {
-      cls: "file-changes-heading"
+      cls: "file-changes-heading",
     });
     heading.setText(`${recordSet.heading}
 `);
     const fileChanges = {
       created: [],
       changed: [],
-      deleted: []
+      deleted: [],
     };
     for (const op of recordSet.ops) {
       fileChanges[op.status].push(op.path);
@@ -1086,7 +1037,7 @@ function showFileOpsRecord(records) {
       heading2.addClass(`file-changes-subheading`);
       for (const path of paths) {
         const listItem = fileOpsNotice.noticeEl.createEl("li", {
-          cls: "file-update-row"
+          cls: "file-update-row",
         });
         listItem.setText(`${path}`);
         listItem.addClass(`file-${changeType}`);
@@ -1101,12 +1052,12 @@ function showUnappliedConflicts(clashedFiles) {
   const localStatusMap = {
     created: "create",
     changed: "change",
-    deleted: "delete"
+    deleted: "delete",
   };
   const remoteStatusMap = {
     ADDED: "create",
     MODIFIED: "change",
-    REMOVED: "delete"
+    REMOVED: "delete",
   };
   const conflictNotice = new import_obsidian.Notice("", 0);
   const heading = conflictNotice.noticeEl.createEl("span");
@@ -1114,24 +1065,24 @@ function showUnappliedConflicts(clashedFiles) {
 `);
   heading.addClass(`file-changes-subheading`);
   const conflictStatus = conflictNotice.noticeEl.createDiv({
-    cls: "file-conflict-row"
+    cls: "file-conflict-row",
   });
   conflictStatus.createDiv().setText("Local");
   conflictStatus.createDiv().setText("Remote");
   for (const clash of clashedFiles) {
     const conflictItem = conflictNotice.noticeEl.createDiv({
-      cls: "file-conflict-row"
+      cls: "file-conflict-row",
     });
     conflictItem.createDiv({
-      cls: `file-conflict-${localStatusMap[clash.localStatus]}`
+      cls: `file-conflict-${localStatusMap[clash.localStatus]}`,
     });
     conflictItem.createDiv("div").setText(clash.path);
     conflictItem.createDiv({
-      cls: `file-conflict-${remoteStatusMap[clash.remoteStatus]}`
+      cls: `file-conflict-${remoteStatusMap[clash.remoteStatus]}`,
     });
   }
   const footer = conflictNotice.noticeEl.createDiv({
-    cls: "file-conflict-row"
+    cls: "file-conflict-row",
   });
   footer.setText("Note:");
   footer.style.fontWeight = "bold";
@@ -1158,7 +1109,7 @@ var Fit = class {
       // Hack to disable caching which leads to inconsistency for
       // read after write https://github.com/octokit/octokit.js/issues/890
       "If-None-Match": "",
-      "X-GitHub-Api-Version": "2022-11-28"
+      "X-GitHub-Api-Version": "2022-11-28",
     };
   }
   loadSettings(setting) {
@@ -1191,15 +1142,18 @@ var Fit = class {
     return await this.fileSha1(path + content);
   }
   async computeLocalSha() {
-    const paths = this.vaultOps.vault.getFiles().map((f) => {
-      return f.path.startsWith("_fit/") ? null : f.path;
-    }).filter(Boolean);
+    const paths = this.vaultOps.vault
+      .getFiles()
+      .map((f) => {
+        return f.path.startsWith("_fit/") ? null : f.path;
+      })
+      .filter(Boolean);
     return Object.fromEntries(
       await Promise.all(
         paths.map(async (p) => {
           return [p, await this.computeFileLocalSha(p)];
-        })
-      )
+        }),
+      ),
     );
   }
   async remoteUpdated() {
@@ -1220,33 +1174,28 @@ var Fit = class {
   getClashedChanges(localChanges, remoteChanges) {
     const localChangePaths = localChanges.map((c) => c.path);
     const remoteChangePaths = remoteChanges.map((c) => c.path);
-    const clashedFiles = localChangePaths.map(
-      (path, localIndex) => {
+    const clashedFiles = localChangePaths
+      .map((path, localIndex) => {
         const remoteIndex = remoteChangePaths.indexOf(path);
         if (remoteIndex !== -1) {
           return { path, localIndex, remoteIndex };
         }
         return null;
-      }
-    ).filter(Boolean);
-    return clashedFiles.map(
-      ({ path, localIndex, remoteIndex }) => {
-        return {
-          path,
-          localStatus: localChanges[localIndex].status,
-          remoteStatus: remoteChanges[remoteIndex].status
-        };
-      }
-    );
+      })
+      .filter(Boolean);
+    return clashedFiles.map(({ path, localIndex, remoteIndex }) => {
+      return {
+        path,
+        localStatus: localChanges[localIndex].status,
+        remoteStatus: remoteChanges[remoteIndex].status,
+      };
+    });
   }
   async getUser() {
     try {
-      const { data: response } = await this.octokit.request(
-        `GET /user`,
-        {
-          headers: this.headers
-        }
-      );
+      const { data: response } = await this.octokit.request(`GET /user`, {
+        headers: this.headers,
+      });
       return { owner: response.login, avatarUrl: response.avatar_url };
     } catch (error) {
       throw new OctokitHttpError(error.message, error.status, "getUser");
@@ -1254,13 +1203,10 @@ var Fit = class {
   }
   async getRepos() {
     try {
-      const { data: response } = await this.octokit.request(
-        `GET /user/repos`,
-        {
-          affiliation: "owner",
-          headers: this.headers
-        }
-      );
+      const { data: response } = await this.octokit.request(`GET /user/repos`, {
+        affiliation: "owner",
+        headers: this.headers,
+      });
       return response.map((r) => r.name);
     } catch (error) {
       throw new OctokitHttpError(error.message, error.status, "getRepos");
@@ -1268,14 +1214,11 @@ var Fit = class {
   }
   async getBranches() {
     try {
-      const { data: response } = await this.octokit.request(
-        `GET /repos/{owner}/{repo}/branches`,
-        {
-          owner: this.owner,
-          repo: this.repo,
-          headers: this.headers
-        }
-      );
+      const { data: response } = await this.octokit.request(`GET /repos/{owner}/{repo}/branches`, {
+        owner: this.owner,
+        repo: this.repo,
+        headers: this.headers,
+      });
       return response.map((r) => r.name);
     } catch (error) {
       throw new OctokitHttpError(error.message, error.status, "getRepos");
@@ -1283,15 +1226,12 @@ var Fit = class {
   }
   async getRef(ref) {
     try {
-      const { data: response } = await this.octokit.request(
-        `GET /repos/{owner}/{repo}/git/ref/{ref}`,
-        {
-          owner: this.owner,
-          repo: this.repo,
-          ref,
-          headers: this.headers
-        }
-      );
+      const { data: response } = await this.octokit.request(`GET /repos/{owner}/{repo}/git/ref/{ref}`, {
+        owner: this.owner,
+        repo: this.repo,
+        ref,
+        headers: this.headers,
+      });
       return response.object.sha;
     } catch (error) {
       throw new OctokitHttpError(error.message, error.status, "getRef");
@@ -1301,61 +1241,56 @@ var Fit = class {
   async getLatestRemoteCommitSha(ref = `heads/${this.branch}`) {
     return await this.getRef(ref);
   }
-  // ref Can be a commit SHA, branch name (heads/BRANCH_NAME), or tag name (tags/TAG_NAME), 
+  // ref Can be a commit SHA, branch name (heads/BRANCH_NAME), or tag name (tags/TAG_NAME),
   // refers to https://git-scm.com/book/en/v2/Git-Internals-Git-References
   async getCommitTreeSha(ref) {
-    const { data: commit } = await this.octokit.request(
-      `GET /repos/{owner}/{repo}/commits/{ref}`,
-      {
-        owner: this.owner,
-        repo: this.repo,
-        ref,
-        headers: this.headers
-      }
-    );
+    const { data: commit } = await this.octokit.request(`GET /repos/{owner}/{repo}/commits/{ref}`, {
+      owner: this.owner,
+      repo: this.repo,
+      ref,
+      headers: this.headers,
+    });
     return commit.commit.tree.sha;
   }
   async getTree(tree_sha) {
-    const { data: tree } = await this.octokit.request(
-      `GET /repos/{owner}/{repo}/git/trees/{tree_sha}`,
-      {
-        owner: this.owner,
-        repo: this.repo,
-        tree_sha,
-        recursive: "true",
-        headers: this.headers
-      }
-    );
+    const { data: tree } = await this.octokit.request(`GET /repos/{owner}/{repo}/git/trees/{tree_sha}`, {
+      owner: this.owner,
+      repo: this.repo,
+      tree_sha,
+      recursive: "true",
+      headers: this.headers,
+    });
     return tree.tree;
   }
   // get the remote tree sha in the format compatible with local store
   async getRemoteTreeSha(tree_sha) {
     const remoteTree = await this.getTree(tree_sha);
-    const remoteSha = Object.fromEntries(remoteTree.map((node) => {
-      if (node.type == "blob") {
-        if (!node.path || !node.sha) {
-          throw new Error("Path or sha not found for blob node in remote");
-        }
-        if (node.path.startsWith("_fit/")) {
+    const remoteSha = Object.fromEntries(
+      remoteTree
+        .map((node) => {
+          if (node.type == "blob") {
+            if (!node.path || !node.sha) {
+              throw new Error("Path or sha not found for blob node in remote");
+            }
+            if (node.path.startsWith("_fit/")) {
+              return null;
+            }
+            return [node.path, node.sha];
+          }
           return null;
-        }
-        return [node.path, node.sha];
-      }
-      return null;
-    }).filter(Boolean));
+        })
+        .filter(Boolean),
+    );
     return remoteSha;
   }
   async createBlob(content, encoding) {
-    const { data: blob } = await this.octokit.request(
-      `POST /repos/{owner}/{repo}/git/blobs`,
-      {
-        owner: this.owner,
-        repo: this.repo,
-        content,
-        encoding,
-        headers: this.headers
-      }
-    );
+    const { data: blob } = await this.octokit.request(`POST /repos/{owner}/{repo}/git/blobs`, {
+      owner: this.owner,
+      repo: this.repo,
+      content,
+      encoding,
+      headers: this.headers,
+    });
     return blob.sha;
   }
   async createTreeNodeFromFile({ path, status, extension }, remoteTree) {
@@ -1367,7 +1302,7 @@ var Fit = class {
         path,
         mode: "100644",
         type: "blob",
-        sha: null
+        sha: null,
       };
     }
     const file = await this.vaultOps.getTFile(path);
@@ -1394,60 +1329,48 @@ var Fit = class {
       path,
       mode: "100644",
       type: "blob",
-      sha: blobSha
+      sha: blobSha,
     };
   }
   async createTree(treeNodes, base_tree_sha) {
-    const { data: newTree } = await this.octokit.request(
-      `POST /repos/{owner}/{repo}/git/trees`,
-      {
-        owner: this.owner,
-        repo: this.repo,
-        tree: treeNodes,
-        base_tree: base_tree_sha,
-        headers: this.headers
-      }
-    );
+    const { data: newTree } = await this.octokit.request(`POST /repos/{owner}/{repo}/git/trees`, {
+      owner: this.owner,
+      repo: this.repo,
+      tree: treeNodes,
+      base_tree: base_tree_sha,
+      headers: this.headers,
+    });
     return newTree.sha;
   }
   async createCommit(treeSha, parentSha) {
-    const message = `Commit from ${this.deviceName} on ${new Date().toLocaleString()}`;
-    const { data: createdCommit } = await this.octokit.request(
-      `POST /repos/{owner}/{repo}/git/commits`,
-      {
-        owner: this.owner,
-        repo: this.repo,
-        message,
-        tree: treeSha,
-        parents: [parentSha],
-        headers: this.headers
-      }
-    );
+    const message = `Commit from ${this.owner} on ${new Date().toLocaleString()}`;
+    const { data: createdCommit } = await this.octokit.request(`POST /repos/{owner}/{repo}/git/commits`, {
+      owner: this.owner,
+      repo: this.repo,
+      message,
+      tree: treeSha,
+      parents: [parentSha],
+      headers: this.headers,
+    });
     return createdCommit.sha;
   }
   async updateRef(sha, ref = `heads/${this.branch}`) {
-    const { data: updatedRef } = await this.octokit.request(
-      `PATCH /repos/{owner}/{repo}/git/refs/{ref}`,
-      {
-        owner: this.owner,
-        repo: this.repo,
-        ref,
-        sha,
-        headers: this.headers
-      }
-    );
+    const { data: updatedRef } = await this.octokit.request(`PATCH /repos/{owner}/{repo}/git/refs/{ref}`, {
+      owner: this.owner,
+      repo: this.repo,
+      ref,
+      sha,
+      headers: this.headers,
+    });
     return updatedRef.object.sha;
   }
   async getBlob(file_sha) {
-    const { data: blob } = await this.octokit.request(
-      `GET /repos/{owner}/{repo}/git/blobs/{file_sha}`,
-      {
-        owner: this.owner,
-        repo: this.repo,
-        file_sha,
-        headers: this.headers
-      }
-    );
+    const { data: blob } = await this.octokit.request(`GET /repos/{owner}/{repo}/git/blobs/{file_sha}`, {
+      owner: this.owner,
+      repo: this.repo,
+      file_sha,
+      headers: this.headers,
+    });
     return blob.content;
   }
 };
@@ -1577,104 +1500,179 @@ var FitSettingTab = class extends import_obsidian4.PluginSettingTab {
     };
     this.githubUserInfoBlock = () => {
       const { containerEl } = this;
-      new import_obsidian4.Setting(containerEl).setHeading().setName("GitHub user info").addButton((button) => button.setCta().setButtonText("Authenticate user").setDisabled(this.authenticating).onClick(async () => {
-        if (this.authenticating)
-          return;
-        await this.handleUserFetch();
-      }));
-      this.ownerSetting = new import_obsidian4.Setting(containerEl).setDesc("Input your personal access token below to get authenticated. Create a GitHub account here if you don't have one yet.").addExtraButton((button) => button.setIcon("github").setTooltip("Sign up on github.com").onClick(async () => {
-        window.open("https://github.com/signup", "_blank");
-      }));
+      new import_obsidian4.Setting(containerEl)
+        .setHeading()
+        .setName("GitHub user info")
+        .addButton((button) =>
+          button
+            .setCta()
+            .setButtonText("Authenticate user")
+            .setDisabled(this.authenticating)
+            .onClick(async () => {
+              if (this.authenticating) return;
+              await this.handleUserFetch();
+            }),
+        );
+      this.ownerSetting = new import_obsidian4.Setting(containerEl).setDesc("Input your personal access token below to get authenticated. Create a GitHub account here if you don't have one yet.").addExtraButton((button) =>
+        button
+          .setIcon("github")
+          .setTooltip("Sign up on github.com")
+          .onClick(async () => {
+            window.open("https://github.com/signup", "_blank");
+          }),
+      );
       this.ownerSetting.nameEl.addClass("fit-avatar-container");
       if (this.plugin.settings.owner === "") {
-        this.authUserAvatar = this.ownerSetting.nameEl.createDiv(
-          { cls: "fit-avatar-container empty" }
-        );
+        this.authUserAvatar = this.ownerSetting.nameEl.createDiv({ cls: "fit-avatar-container empty" });
         this.authUserHandle = this.ownerSetting.nameEl.createEl("span", { cls: "fit-github-handle" });
         this.authUserHandle.setText("Unauthenticated");
       } else {
-        this.authUserAvatar = this.ownerSetting.nameEl.createDiv(
-          { cls: "fit-avatar-container" }
-        );
+        this.authUserAvatar = this.ownerSetting.nameEl.createDiv({ cls: "fit-avatar-container" });
         this.authUserAvatar.createEl("img", { attr: { src: this.plugin.settings.avatarUrl } });
         this.authUserHandle = this.ownerSetting.nameEl.createEl("span", { cls: "fit-github-handle" });
         this.authUserHandle.setText(this.plugin.settings.owner);
       }
       this.ownerSetting.controlEl.addClass("fit-avatar-display-text");
-      this.patSetting = new import_obsidian4.Setting(containerEl).setName("Github personal access token").setDesc("Remember to give it access for reading and writing to the storage repo.").addText((text) => text.setPlaceholder("GitHub personal access token").setValue(this.plugin.settings.pat).onChange(async (value) => {
-        this.plugin.settings.pat = value;
-        await this.plugin.saveSettings();
-      })).addExtraButton((button) => button.setIcon("external-link").setTooltip("Create a token").onClick(async () => {
-        window.open("https://github.com/settings/tokens/new", "_blank");
-      }));
+      this.patSetting = new import_obsidian4.Setting(containerEl)
+        .setName("Github personal access token")
+        .setDesc("Remember to give it access for reading and writing to the storage repo.")
+        .addText((text) =>
+          text
+            .setPlaceholder("GitHub personal access token")
+            .setValue(this.plugin.settings.pat)
+            .onChange(async (value) => {
+              this.plugin.settings.pat = value;
+              await this.plugin.saveSettings();
+            }),
+        )
+        .addExtraButton((button) =>
+          button
+            .setIcon("external-link")
+            .setTooltip("Create a token")
+            .onClick(async () => {
+              window.open("https://github.com/settings/tokens/new", "_blank");
+            }),
+        );
     };
     this.repoInfoBlock = async () => {
       const { containerEl } = this;
-      new import_obsidian4.Setting(containerEl).setHeading().setName("Repository info").setDesc("Refresh to retrieve the latest list of repos and branches.").addExtraButton((button) => button.setTooltip("Refresh repos and branches list").setDisabled(this.plugin.settings.owner === "").setIcon("refresh-cw").onClick(async () => {
-        await this.refreshFields("repo(0)");
-      }));
-      new import_obsidian4.Setting(containerEl).setDesc("Select 'Add a README file' if creating a new repo. Make sure you are logged in to github on your browser.").addExtraButton((button) => button.setIcon("github").setTooltip("Create a new repository").onClick(() => {
-        window.open(`https://github.com/new`, "_blank");
-      }));
-      this.repoSetting = new import_obsidian4.Setting(containerEl).setName("Github repository name").setDesc("Select a repo to sync your vault.").addDropdown((dropdown) => {
-        dropdown.selectEl.addClass("repo-dropdown");
-        this.existingRepos.map((repo) => dropdown.addOption(repo, repo));
-        dropdown.setDisabled(this.existingRepos.length === 0);
-        dropdown.setValue(this.plugin.settings.repo);
-        dropdown.onChange(async (value) => {
-          const repoChanged = value !== this.plugin.settings.repo;
-          if (repoChanged) {
-            this.plugin.settings.repo = value;
-            await this.plugin.saveSettings();
-            await this.refreshFields("branch(1)");
-          }
-        });
-      });
-      this.branchSetting = new import_obsidian4.Setting(containerEl).setName("Branch name").setDesc("Select a repo above to view existing branches.").addDropdown((dropdown) => {
-        dropdown.selectEl.addClass("branch-dropdown");
-        dropdown.setDisabled(this.existingBranches.length === 0);
-        this.existingBranches.map((repo) => dropdown.addOption(repo, repo));
-        dropdown.setValue(this.plugin.settings.branch);
-        dropdown.onChange(async (value) => {
-          const branchChanged = value !== this.plugin.settings.branch;
-          if (branchChanged) {
-            this.plugin.settings.branch = value;
-            await this.plugin.saveSettings();
-            await this.refreshFields("link(2)");
-          }
-        });
-      });
-      this.repoLink = this.getLatestLink();
-      const linkDisplay = new import_obsidian4.Setting(containerEl).setName("View your vault on GitHub").setDesc(this.repoLink).addExtraButton(
-        (button) => button.setDisabled(this.repoLink.length === 0).setTooltip("Open on GitHub").setIcon("external-link").onClick(() => {
-          console.log(`opening ${this.repoLink}`);
-          window.open(this.repoLink, "_blank");
-        })
+      new import_obsidian4.Setting(containerEl)
+        .setHeading()
+        .setName("Repository info")
+        .setDesc("Refresh to retrieve the latest list of repos and branches.")
+        .addExtraButton((button) =>
+          button
+            .setTooltip("Refresh repos and branches list")
+            .setDisabled(this.plugin.settings.owner === "")
+            .setIcon("refresh-cw")
+            .onClick(async () => {
+              await this.refreshFields("repo(0)");
+            }),
+        );
+      new import_obsidian4.Setting(containerEl).setDesc("Select 'Add a README file' if creating a new repo. Make sure you are logged in to github on your browser.").addExtraButton((button) =>
+        button
+          .setIcon("github")
+          .setTooltip("Create a new repository")
+          .onClick(() => {
+            window.open(`https://github.com/new`, "_blank");
+          }),
       );
+      this.repoSetting = new import_obsidian4.Setting(containerEl)
+        .setName("Github repository name")
+        .setDesc("Select a repo to sync your vault.")
+        .addDropdown((dropdown) => {
+          dropdown.selectEl.addClass("repo-dropdown");
+          this.existingRepos.map((repo) => dropdown.addOption(repo, repo));
+          dropdown.setDisabled(this.existingRepos.length === 0);
+          dropdown.setValue(this.plugin.settings.repo);
+          dropdown.onChange(async (value) => {
+            const repoChanged = value !== this.plugin.settings.repo;
+            if (repoChanged) {
+              this.plugin.settings.repo = value;
+              await this.plugin.saveSettings();
+              await this.refreshFields("branch(1)");
+            }
+          });
+        });
+      this.branchSetting = new import_obsidian4.Setting(containerEl)
+        .setName("Branch name")
+        .setDesc("Select a repo above to view existing branches.")
+        .addDropdown((dropdown) => {
+          dropdown.selectEl.addClass("branch-dropdown");
+          dropdown.setDisabled(this.existingBranches.length === 0);
+          this.existingBranches.map((repo) => dropdown.addOption(repo, repo));
+          dropdown.setValue(this.plugin.settings.branch);
+          dropdown.onChange(async (value) => {
+            const branchChanged = value !== this.plugin.settings.branch;
+            if (branchChanged) {
+              this.plugin.settings.branch = value;
+              await this.plugin.saveSettings();
+              await this.refreshFields("link(2)");
+            }
+          });
+        });
+      this.repoLink = this.getLatestLink();
+      const linkDisplay = new import_obsidian4.Setting(containerEl)
+        .setName("View your vault on GitHub")
+        .setDesc(this.repoLink)
+        .addExtraButton((button) =>
+          button
+            .setDisabled(this.repoLink.length === 0)
+            .setTooltip("Open on GitHub")
+            .setIcon("external-link")
+            .onClick(() => {
+              console.log(`opening ${this.repoLink}`);
+              window.open(this.repoLink, "_blank");
+            }),
+        );
       linkDisplay.descEl.addClass("link-desc");
     };
     this.localConfigBlock = () => {
       const { containerEl } = this;
       new import_obsidian4.Setting(containerEl).setHeading().setName("Local configurations");
-      new import_obsidian4.Setting(containerEl).setName("Device name").setDesc("Sign commit message with this device name.").addText((text) => text.setPlaceholder("Device name").setValue(this.plugin.settings.deviceName).onChange(async (value) => {
-        this.plugin.settings.deviceName = value;
-        await this.plugin.saveSettings();
-      }));
-      new import_obsidian4.Setting(containerEl).setName("Auto sync").setDesc(`Automatically sync your vault when remote has updates. (Muted: sync in the background without displaying notices, except for file changes and conflicts notice)`).addDropdown((dropdown) => {
-        dropdown.addOption("off", "Off").addOption("muted", "Muted").addOption("remind", "Remind only").addOption("on", "On").setValue(this.plugin.settings.autoSync ? this.plugin.settings.autoSync : "off").onChange(async (value) => {
-          this.plugin.settings.autoSync = value;
-          checkIntervalSlider.settingEl.addClass(value === "off" ? "clear" : "restore");
-          checkIntervalSlider.settingEl.removeClass(value === "off" ? "restore" : "clear");
-          await this.plugin.saveSettings();
+      new import_obsidian4.Setting(containerEl)
+        .setName("Device name")
+        .setDesc("Sign commit message with this device name.")
+        .addText((text) =>
+          text
+            .setPlaceholder("Device name")
+            .setValue(this.plugin.settings.deviceName)
+            .onChange(async (value) => {
+              this.plugin.settings.deviceName = value;
+              await this.plugin.saveSettings();
+            }),
+        );
+      new import_obsidian4.Setting(containerEl)
+        .setName("Auto sync")
+        .setDesc(`Automatically sync your vault when remote has updates. (Muted: sync in the background without displaying notices, except for file changes and conflicts notice)`)
+        .addDropdown((dropdown) => {
+          dropdown
+            .addOption("off", "Off")
+            .addOption("muted", "Muted")
+            .addOption("remind", "Remind only")
+            .addOption("on", "On")
+            .setValue(this.plugin.settings.autoSync ? this.plugin.settings.autoSync : "off")
+            .onChange(async (value) => {
+              this.plugin.settings.autoSync = value;
+              checkIntervalSlider.settingEl.addClass(value === "off" ? "clear" : "restore");
+              checkIntervalSlider.settingEl.removeClass(value === "off" ? "restore" : "clear");
+              await this.plugin.saveSettings();
+            });
         });
-      });
-      const checkIntervalSlider = new import_obsidian4.Setting(containerEl).setName("Auto check interval").setDesc(`Automatically check for remote changes in the background every ${this.plugin.settings.checkEveryXMinutes} minutes.`).addSlider(
-        (slider) => slider.setLimits(1, 60, 1).setValue(this.plugin.settings.checkEveryXMinutes).setDynamicTooltip().onChange(async (value) => {
-          this.plugin.settings.checkEveryXMinutes = value;
-          await this.plugin.saveSettings();
-          checkIntervalSlider.setDesc(`Automatically check for remote changes in the background every ${value} minutes.`);
-        })
-      );
+      const checkIntervalSlider = new import_obsidian4.Setting(containerEl)
+        .setName("Auto check interval")
+        .setDesc(`Automatically check for remote changes in the background every ${this.plugin.settings.checkEveryXMinutes} minutes.`)
+        .addSlider((slider) =>
+          slider
+            .setLimits(1, 60, 1)
+            .setValue(this.plugin.settings.checkEveryXMinutes)
+            .setDynamicTooltip()
+            .onChange(async (value) => {
+              this.plugin.settings.checkEveryXMinutes = value;
+              await this.plugin.saveSettings();
+              checkIntervalSlider.setDesc(`Automatically check for remote changes in the background every ${value} minutes.`);
+            }),
+        );
       if (this.plugin.settings.autoSync === "off") {
         checkIntervalSlider.settingEl.addClass("clear");
       }
@@ -1704,14 +1702,14 @@ var FitSettingTab = class extends import_obsidian4.PluginSettingTab {
           this.plugin.settings.notifyConflicts = notifyConflicts;
           await this.plugin.saveSettings();
           button.buttonEl.setCssStyles({
-            "background": notifyConflicts ? selectedCol : unselectedColor,
-            "color": notifyConflicts ? selectedTxtCol : unselectedTxtCol
+            background: notifyConflicts ? selectedCol : unselectedColor,
+            color: notifyConflicts ? selectedTxtCol : unselectedTxtCol,
           });
           noticeDisplay.setDesc(`${stateTextMap(notifyConflicts, this.plugin.settings.notifyChanges)} after sync.`);
         });
         button.buttonEl.setCssStyles({
-          "background": this.plugin.settings.notifyConflicts ? selectedCol : unselectedColor,
-          "color": this.plugin.settings.notifyConflicts ? selectedTxtCol : unselectedTxtCol
+          background: this.plugin.settings.notifyConflicts ? selectedCol : unselectedColor,
+          color: this.plugin.settings.notifyConflicts ? selectedTxtCol : unselectedTxtCol,
         });
       });
       noticeDisplay.addButton((button) => {
@@ -1721,14 +1719,14 @@ var FitSettingTab = class extends import_obsidian4.PluginSettingTab {
           this.plugin.settings.notifyChanges = notifyChanges;
           await this.plugin.saveSettings();
           button.buttonEl.setCssStyles({
-            "background": notifyChanges ? selectedCol : unselectedColor,
-            "color": notifyChanges ? selectedTxtCol : unselectedTxtCol
+            background: notifyChanges ? selectedCol : unselectedColor,
+            color: notifyChanges ? selectedTxtCol : unselectedTxtCol,
           });
           noticeDisplay.setDesc(`${stateTextMap(this.plugin.settings.notifyConflicts, notifyChanges)} after sync.`);
         });
         button.buttonEl.setCssStyles({
-          "background": this.plugin.settings.notifyChanges ? selectedCol : unselectedColor,
-          "color": this.plugin.settings.notifyChanges ? selectedTxtCol : unselectedTxtCol
+          background: this.plugin.settings.notifyChanges ? selectedCol : unselectedColor,
+          color: this.plugin.settings.notifyChanges ? selectedTxtCol : unselectedTxtCol,
         });
       });
     };
@@ -1863,15 +1861,15 @@ var FitPull = class {
     const remoteTreeSha = await this.fit.getRemoteTreeSha(remoteCommitSha);
     const remoteChanges = await this.fit.getRemoteChanges(remoteTreeSha);
     const clashedFiles = this.fit.getClashedChanges(localChanges, remoteChanges);
-    const prePullCheckStatus = remoteChanges.length > 0 ? clashedFiles.length > 0 ? "localChangesClashWithRemoteChanges" : "remoteChangesCanBeMerged" : "noRemoteChangesDetected";
+    const prePullCheckStatus = remoteChanges.length > 0 ? (clashedFiles.length > 0 ? "localChangesClashWithRemoteChanges" : "remoteChangesCanBeMerged") : "noRemoteChangesDetected";
     return {
       status: prePullCheckStatus,
       remoteUpdate: {
         remoteChanges,
         remoteTreeSha,
         latestRemoteCommitSha: remoteCommitSha,
-        clashedFiles
-      }
+        clashedFiles,
+      },
     };
   }
   // Get changes from remote, pathShaMap is coupled to the Fit plugin design
@@ -1884,13 +1882,12 @@ var FitPull = class {
   }
   async prepareChangesToExecute(remoteChanges) {
     const deleteFromLocal = remoteChanges.filter((c) => c.status == "REMOVED").map((c) => c.path);
-    const changesToProcess = remoteChanges.filter((c) => c.status != "REMOVED").reduce(
-      (acc, change) => {
+    const changesToProcess = remoteChanges
+      .filter((c) => c.status != "REMOVED")
+      .reduce((acc, change) => {
         acc[change.path] = change.currentSha;
         return acc;
-      },
-      {}
-    );
+      }, {});
     const addToLocal = await this.getRemoteNonDeletionChangesContent(changesToProcess);
     return { addToLocal, deleteFromLocal };
   }
@@ -1901,7 +1898,7 @@ var FitPull = class {
     await saveLocalStoreCallback({
       lastFetchedRemoteSha: remoteTreeSha,
       lastFetchedCommitSha: latestRemoteCommitSha,
-      localSha: await this.fit.computeLocalSha()
+      localSha: await this.fit.computeLocalSha(),
     });
     return fileOpsRecord;
   }
@@ -1915,13 +1912,17 @@ var FitPush = class {
   async createCommitFromLocalUpdate(localUpdate, remoteTree) {
     const { localChanges, parentCommitSha } = localUpdate;
     const pushedChanges = [];
-    const treeNodes = (await Promise.all(localChanges.map(async (f, i) => {
-      const node = await this.fit.createTreeNodeFromFile(f, remoteTree);
-      if (node) {
-        pushedChanges.push(localChanges[i]);
-        return node;
-      }
-    }))).filter(Boolean);
+    const treeNodes = (
+      await Promise.all(
+        localChanges.map(async (f, i) => {
+          const node = await this.fit.createTreeNodeFromFile(f, remoteTree);
+          if (node) {
+            pushedChanges.push(localChanges[i]);
+            return node;
+          }
+        }),
+      )
+    ).filter(Boolean);
     console.log(treeNodes);
     if (treeNodes.length === 0) {
       return null;
@@ -1946,7 +1947,7 @@ var FitPush = class {
     return {
       pushedChanges,
       lastFetchedRemoteSha: updatedRemoteTreeSha,
-      lastFetchedCommitSha: createdCommitSha
+      lastFetchedCommitSha: createdCommitSha,
     };
   }
 };
@@ -1991,10 +1992,10 @@ var FitSync = class {
         remoteChanges,
         remoteTreeSha,
         latestRemoteCommitSha: remoteCommitSha,
-        clashedFiles: clashes
+        clashedFiles: clashes,
       },
       localChanges,
-      localTreeSha: currentLocalSha
+      localTreeSha: currentLocalSha,
     };
   }
   generateConflictReport(path, localContent, remoteContent) {
@@ -2003,14 +2004,14 @@ var FitSync = class {
       return {
         path,
         resolutionStrategy: "binary",
-        remoteContent
+        remoteContent,
       };
     }
     return {
       path,
       resolutionStrategy: "utf-8",
       localContent,
-      remoteContent
+      remoteContent,
     };
   }
   async handleBinaryConflict(path, remoteContent) {
@@ -2020,7 +2021,7 @@ var FitSync = class {
     await this.fit.vaultOps.writeToLocal(conflictResolutionPath, remoteContent);
     return {
       path: conflictResolutionPath,
-      status: "created"
+      status: "created",
     };
   }
   async handleUTF8Conflict(path, localContent, remoteConent) {
@@ -2030,7 +2031,7 @@ var FitSync = class {
     this.fit.vaultOps.writeToLocal(conflictResolutionPath, remoteConent);
     return {
       path: conflictResolutionPath,
-      status: "created"
+      status: "created",
     };
   }
   async handleLocalDeletionConflict(path, remoteContent) {
@@ -2040,7 +2041,7 @@ var FitSync = class {
     this.fit.vaultOps.writeToLocal(conflictResolutionPath, remoteContent);
     return {
       path: conflictResolutionPath,
-      status: "created"
+      status: "created",
     };
   }
   async resolveFileConflict(clash, latestRemoteFileSha) {
@@ -2074,24 +2075,24 @@ var FitSync = class {
     const fileResolutions = await Promise.all(
       clashedFiles.map((clash) => {
         return this.resolveFileConflict(clash, latestRemoteTreeSha[clash.path]);
-      })
+      }),
     );
-    const unresolvedFiles = fileResolutions.map((res, i) => {
-      if (!res.noDiff) {
-        return clashedFiles[i];
-      }
-      return null;
-    }).filter(Boolean);
+    const unresolvedFiles = fileResolutions
+      .map((res, i) => {
+        if (!res.noDiff) {
+          return clashedFiles[i];
+        }
+        return null;
+      })
+      .filter(Boolean);
     return {
       noConflict: fileResolutions.every((res) => res.noDiff),
       unresolvedFiles,
-      fileOpsRecord: fileResolutions.map((r) => r.fileOp).filter(Boolean)
+      fileOpsRecord: fileResolutions.map((r) => r.fileOp).filter(Boolean),
     };
   }
   async syncCompatibleChanges(localUpdate, remoteUpdate, syncNotice) {
-    const { addToLocal, deleteFromLocal } = await this.fitPull.prepareChangesToExecute(
-      remoteUpdate.remoteChanges
-    );
+    const { addToLocal, deleteFromLocal } = await this.fitPull.prepareChangesToExecute(remoteUpdate.remoteChanges);
     syncNotice.setMessage("Uploading local changes");
     const remoteTree = await this.fit.getTree(localUpdate.parentCommitSha);
     const createCommitResult = await this.fitPush.createCommitFromLocalUpdate(localUpdate, remoteTree);
@@ -2114,7 +2115,7 @@ var FitSync = class {
     await this.saveLocalStoreCallback({
       lastFetchedRemoteSha: latestRemoteTreeSha,
       lastFetchedCommitSha: latestCommitSha,
-      localSha: await this.fit.computeLocalSha()
+      localSha: await this.fit.computeLocalSha(),
     });
     syncNotice.setMessage("Sync successful");
     return { localOps: localFileOpsRecord, remoteOps: pushedChanges };
@@ -2135,7 +2136,7 @@ var FitSync = class {
     const { addToLocal, deleteFromLocal } = await this.fitPull.prepareChangesToExecute(remoteChangesToWrite);
     const syncLocalUpdate = {
       localChanges: localChangesToPush,
-      parentCommitSha: latestRemoteCommitSha
+      parentCommitSha: latestRemoteCommitSha,
     };
     const pushResult = await this.fitPush.pushChangedFilesToRemote(syncLocalUpdate);
     let pushedChanges;
@@ -2154,7 +2155,7 @@ var FitSync = class {
     await this.saveLocalStoreCallback({
       lastFetchedRemoteSha,
       lastFetchedCommitSha,
-      localSha: await this.fit.computeLocalSha()
+      localSha: await this.fit.computeLocalSha(),
     });
     const ops = localFileOpsRecord.concat(fileOpsRecord);
     if (unresolvedFiles.length === 0) {
@@ -2188,7 +2189,7 @@ var FitSync = class {
     const { localChanges, localTreeSha } = preSyncCheckResult;
     const localUpdate = {
       localChanges,
-      parentCommitSha: remoteUpdate.latestRemoteCommitSha
+      parentCommitSha: remoteUpdate.latestRemoteCommitSha,
     };
     if (preSyncCheckResult.status === "onlyLocalChanged") {
       syncNotice.setMessage("Uploading local changes");
@@ -2198,40 +2199,32 @@ var FitSync = class {
         await this.saveLocalStoreCallback({
           localSha: localTreeSha,
           lastFetchedRemoteSha: pushResult.lastFetchedRemoteSha,
-          lastFetchedCommitSha: pushResult.lastFetchedCommitSha
+          lastFetchedCommitSha: pushResult.lastFetchedCommitSha,
         });
         return { ops: [{ heading: "Local file updates:", ops: pushResult.pushedChanges }], clash: [] };
       }
       return;
     }
     if (preSyncCheckResult.status === "localAndRemoteChangesCompatible") {
-      const { localOps, remoteOps } = await this.syncCompatibleChanges(
-        localUpdate,
-        remoteUpdate,
-        syncNotice
-      );
+      const { localOps, remoteOps } = await this.syncCompatibleChanges(localUpdate, remoteUpdate, syncNotice);
       return {
         ops: [
           { heading: "Local file updates:", ops: localOps },
-          { heading: "Remote file updates:", ops: remoteOps }
+          { heading: "Remote file updates:", ops: remoteOps },
         ],
-        clash: []
+        clash: [],
       };
     }
     if (preSyncCheckResult.status === "localAndRemoteChangesClashed") {
-      const conflictResolutionResult = await this.syncWithConflicts(
-        localUpdate.localChanges,
-        remoteUpdate,
-        syncNotice
-      );
+      const conflictResolutionResult = await this.syncWithConflicts(localUpdate.localChanges, remoteUpdate, syncNotice);
       if (conflictResolutionResult) {
         const { unresolvedFiles, localOps, remoteOps } = conflictResolutionResult;
         return {
           ops: [
             { heading: "Local file updates:", ops: localOps },
-            { heading: "Remote file updates:", ops: remoteOps }
+            { heading: "Remote file updates:", ops: remoteOps },
           ],
-          clash: unresolvedFiles
+          clash: unresolvedFiles,
         };
       }
     }
@@ -2328,12 +2321,12 @@ var DEFAULT_SETTINGS = {
   checkEveryXMinutes: 5,
   autoSync: "off",
   notifyChanges: true,
-  notifyConflicts: true
+  notifyConflicts: true,
 };
 var DEFAULT_LOCAL_STORE = {
   localSha: {},
   lastFetchedCommitSha: null,
-  lastFetchedRemoteSha: {}
+  lastFetchedRemoteSha: {},
 };
 var FitPlugin = class extends import_obsidian7.Plugin {
   constructor() {
@@ -2451,13 +2444,7 @@ var FitPlugin = class extends import_obsidian7.Plugin {
       return;
     }
     this.autoSyncing = true;
-    const syncNotice = new FitNotice(
-      this.fit,
-      ["loading"],
-      "Auto syncing",
-      0,
-      this.settings.autoSync === "muted"
-    );
+    const syncNotice = new FitNotice(this.fit, ["loading"], "Auto syncing", 0, this.settings.autoSync === "muted");
     const errorCaught = await this.catchErrorAndNotify(this.sync, syncNotice);
     if (errorCaught === true) {
       syncNotice.remove("error");
@@ -2511,34 +2498,28 @@ var FitPlugin = class extends import_obsidian7.Plugin {
   async loadSettings() {
     const userSetting = await this.loadData();
     const settings = Object.assign({}, DEFAULT_SETTINGS, userSetting);
-    const settingsObj = Object.keys(DEFAULT_SETTINGS).reduce(
-      (obj, key) => {
-        if (settings.hasOwnProperty(key)) {
-          if (key == "checkEveryXMinutes") {
-            obj[key] = Number(settings[key]);
-          } else if (key === "notifyChanges" || key === "notifyConflicts") {
-            obj[key] = Boolean(settings[key]);
-          } else {
-            obj[key] = settings[key];
-          }
+    const settingsObj = Object.keys(DEFAULT_SETTINGS).reduce((obj, key) => {
+      if (settings.hasOwnProperty(key)) {
+        if (key == "checkEveryXMinutes") {
+          obj[key] = Number(settings[key]);
+        } else if (key === "notifyChanges" || key === "notifyConflicts") {
+          obj[key] = Boolean(settings[key]);
+        } else {
+          obj[key] = settings[key];
         }
-        return obj;
-      },
-      {}
-    );
+      }
+      return obj;
+    }, {});
     this.settings = settingsObj;
   }
   async loadLocalStore() {
     const localStore = Object.assign({}, DEFAULT_LOCAL_STORE, await this.loadData());
-    const localStoreObj = Object.keys(DEFAULT_LOCAL_STORE).reduce(
-      (obj, key) => {
-        if (localStore.hasOwnProperty(key)) {
-          obj[key] = localStore[key];
-        }
-        return obj;
-      },
-      {}
-    );
+    const localStoreObj = Object.keys(DEFAULT_LOCAL_STORE).reduce((obj, key) => {
+      if (localStore.hasOwnProperty(key)) {
+        obj[key] = localStore[key];
+      }
+      return obj;
+    }, {});
     this.localStore = localStoreObj;
   }
   // allow saving of local stores property, passed in properties will override existing stored value
@@ -2554,6 +2535,5 @@ var FitPlugin = class extends import_obsidian7.Plugin {
     this.fit.loadSettings(this.settings);
   }
 };
-
 
 /* nosourcemap */
