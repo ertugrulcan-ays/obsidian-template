@@ -11,10 +11,14 @@
             "id": "af84f33871ad223c",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
-              "icon": "lucide-file",
-              "title": "New tab"
+              "type": "split-diff-view",
+              "state": {
+                "aFile": ".vscode/settings.json",
+                "bFile": ".vscode/settings.json",
+                "aRef": ""
+              },
+              "icon": "diff",
+              "title": "Diff: settings.json"
             }
           }
         ]
