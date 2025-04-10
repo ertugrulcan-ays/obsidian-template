@@ -11,4 +11,4 @@ Hey this image with obsidian
 [[Pasted image 20250410090206.png]]
 
 Bu commit fit ile atıldı.
-After fit commit message edit
+After fit commit message edit.
