@@ -6,4 +6,4 @@ This repository meant to be used to document Ayasofyazılım's projects.
 - [ ] Open from obsidian.
 - [ ] Enable Community Plugins, Open  ==**Settings > Options > Community Plugins**==  and enable it.
 
-- [ ] Use ![[fit-icon.png]]  button for sync your writings. 
+- [ ] Use ![[sync.png]]  button for sync your writings. 
