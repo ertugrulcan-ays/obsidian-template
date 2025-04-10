@@ -9,3 +9,5 @@ This commit belongs to fit.
 This commit was auto with fit.
 Hey this image with obsidian
 [[Pasted image 20250410090206.png]]
+
+Bu commit fit ile atıldı.
