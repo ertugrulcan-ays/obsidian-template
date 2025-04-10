@@ -13,3 +13,6 @@ Hey this image with obsidian
 Bu commit fit ile atıldı.
 After fit commit message edit. 2
 I will clean this
+
+
+Bu commit fit ile mobilden atıldı.
