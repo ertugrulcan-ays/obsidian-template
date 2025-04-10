@@ -1,12 +1,12 @@
 {
-  "pat": "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",
-  "owner": "ertugrulcan-ays",
-  "avatarUrl": "https://avatars.githubusercontent.com/u/97029214?v=4",
-  "repo": "obsidian-test",
-  "branch": "main",
+  "pat": "",
+  "owner": "",
+  "avatarUrl": "",
+  "repo": "",
+  "branch": "",
   "deviceName": "",
   "checkEveryXMinutes": 5,
   "autoSync": "off",
-  "notifyChanges": true,
-  "notifyConflicts": true
+  "notifyChanges": false,
+  "notifyConflicts": false
 }
