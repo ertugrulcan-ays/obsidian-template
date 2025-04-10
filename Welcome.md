@@ -7,4 +7,5 @@ When you're ready, delete this note and make the vault your own.
 This commit belongs to fit.
 
 This commit was auto with fit.
-Hey
+Hey this image with obsidian
+[[Pasted image 20250410090206.png]]
