@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "53dd05a3facdd1c1",
+        "id": "4fcc458d7166521e",
         "type": "tabs",
         "children": [
           {
-            "id": "a47a6b1aabce6331",
+            "id": "17e6900f101b1e92",
             "type": "leaf",
             "state": {
               "type": "empty",
@@ -163,18 +163,23 @@
   },
   "left-ribbon": {
     "hiddenItems": {
+      "obsidian-to-notion:Share to notion": false,
       "switcher:Open quick switcher": false,
       "canvas:Create new canvas": false,
       "graph:Open graph view": false,
       "daily-notes:Open today's daily note": false,
       "templates:Insert template": false,
       "command-palette:Open command palette": false,
-      "fit:Fit Sync": false,
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "a47a6b1aabce6331",
+  "active": "62165e766ae34e25",
   "lastOpenFiles": [
+    "frontend/Start.md",
+    "frontend",
+    "backend/Start.md",
+    "backend",
+    "Welcome.md",
     "Usage.md",
     "unirefund/Welcome to Unirefund.md",
     "faturaturka/Welcome to FaturaTurka.md",
@@ -187,7 +192,6 @@
     "images/Pasted image 20250410090206.png",
     "create a link.md",
     "readme.md",
-    "Welcome.md",
     "Pasted image 20250410090206.png",
     "images/fit-icon.png",
     "assets/sync.png",
@@ -202,7 +206,6 @@
     "unirefund",
     "_fit/Welcome.md",
     "_fit/readme.md",
-    "assets",
-    "_fit"
+    "assets"
   ]
 }
